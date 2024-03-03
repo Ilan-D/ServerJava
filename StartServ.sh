@@ -1,0 +1,1 @@
+javac *.java ; mv *.class bin ; java -cp "bin" Server
