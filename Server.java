@@ -2,8 +2,6 @@ import java.io.*;
 import java.net.*;
 import java.util.*;
 
-import javax.naming.NameNotFoundException;
-
 public class Server {
     private List<ClientHandler> clients = new ArrayList<>();
 
@@ -13,14 +11,12 @@ public class Server {
         try {
             InetAddress CurrentIP = InetAddress.getLocalHost();
             ServerSocket serverSocket = new ServerSocket(port, 10, CurrentIP);
+            System.out.println("Server IP " + CurrentIP);
             System.out.println("Server started on port " + port);
 
             while (true) {
 
                 Socket socket = serverSocket.accept();
-
-                // ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
-                // Player player = (Player) in.readObject();
 
                 ClientHandler clientHandler = new ClientHandler(socket, this);
 
@@ -50,7 +46,7 @@ public class Server {
     public void BroadCastMessage(String message, ClientHandler sender) {
         for (ClientHandler client : clients) {
             if (client != sender) {
-                client.sendMessage(sender.getNameClient() + " : " + message);
+                client.sendMessage(message);
             }
         }
     }

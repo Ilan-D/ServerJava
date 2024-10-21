@@ -2,7 +2,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.io.PrintWriter;
 import java.net.Socket;
 
@@ -17,11 +16,8 @@ public class ClientHandler extends Thread {
         this.socket = socket;
         this.server = server;
         try {
-            out = new PrintWriter(socket.getOutputStream(), true);
             in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-
-            ClientName = in.readLine();
-            System.out.println("Client connected : " + ClientName);
+            out = new PrintWriter(socket.getOutputStream(), true);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -31,10 +27,12 @@ public class ClientHandler extends Thread {
     // appelant la methode run.
     public void run() {
         try {
-            // System.out.print("Veuillez entrer votre nom : ");
-            // ClientName = in.readLine();
             out = new PrintWriter(socket.getOutputStream(), true);
             in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+
+            ClientName = in.readLine();
+            System.out.println("Client connecté : " + ClientName);
+            server.BroadCastMessage(ClientName + " a rejoint le chat", this);
 
             String clientMessage;
             while ((clientMessage = in.readLine()) != null) {
@@ -43,10 +41,7 @@ public class ClientHandler extends Thread {
                     break;
                 }
                 System.out.println(ClientName + " : " + clientMessage);
-                server.BroadCastMessage(clientMessage, this);
-
-                // Handle client message here
-                // Example: Update game state, send updates to clients, etc.
+                server.BroadCastMessage(ClientName + " : " + clientMessage, this);
             }
 
             ObjectInputStream inObj = new ObjectInputStream(socket.getInputStream());

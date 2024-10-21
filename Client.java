@@ -7,8 +7,7 @@ public class Client {
 
     public void handleConnexion() {
         try {
-            // ClientIP = InetAddress.getLocalHost();
-            Socket socket = new Socket("192.168.0.40", SERVER_PORT);
+            Socket socket = new Socket("192.168.0.22", SERVER_PORT);
             System.out.println("Connected to server.");
 
             PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
@@ -20,6 +19,9 @@ public class Client {
             outObj.writeObject(player);
 
             System.out.print("Entrez votre nom d'utilisateur : ");
+            String name_client = userInputReader.readLine();
+            out.println(name_client);
+
             String userInput;
 
             Thread serverReaderThread = new Thread(() -> {
